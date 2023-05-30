@@ -28,11 +28,12 @@ if __name__ == '__main__':
 
     
     with socket(AF_INET, SOCK_STREAM) as client_socket:
-        client_socket.connect(SERVER_ADDR)  
+        client_socket.connect(SERVER_ADDR)  #connect 완료
         
         ###################################################################
         # Receive who will start first from the server
-    
+        startStr = client_socket.recv(1024).decode()
+        start = int(startStr)
     
         ######################### Fill Out ################################
         # Send ACK 

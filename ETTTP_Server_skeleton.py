@@ -16,7 +16,7 @@ import _thread
 
 from ETTTP_TicTacToe_skeleton import TTT, check_msg
 
-    
+ #name이라는 변수 값이 main이면 아래 코드 실행
 if __name__ == '__main__':
     
     global send_header, recv_header
@@ -28,9 +28,11 @@ if __name__ == '__main__':
     MY_IP = '127.0.0.1'
     
     while True:
-        client_socket, client_addr = server_socket.accept()
+        client_socket, client_addr = server_socket.accept() #연결되도록 기다림
         
         start = random.randrange(0,2)   # select random to start
+        startStr = str(start)
+        client_socket.send(startStr.encode())  #start를 client에 보낸다.
         
         ###################################################################
         # Send start move information to peer
