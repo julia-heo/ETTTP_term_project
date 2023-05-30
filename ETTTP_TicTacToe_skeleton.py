@@ -35,21 +35,24 @@ class TTT(tk.Tk):
         
         
         # Set variables for Client and Server UI
+        ############## updated ###########################
         if client:
             self.myID = 1   #0: server, 1: client
             self.title('34743-02-Tic-Tac-Toe Client')
             self.user = {'value': self.line_size+1, 'bg': 'blue',
-                     'win': 'Result: You Won!', 'text':'O','Name':"YOU"}
+                     'win': 'Result: You Won!', 'text':'O','Name':"ME"}
             self.computer = {'value': 1, 'bg': 'orange',
-                             'win': 'Result: You Lost!', 'text':'X','Name':"ME"}   
+                             'win': 'Result: You Lost!', 'text':'X','Name':"YOU"}
         else:
             self.myID = 0
             self.title('34743-02-Tic-Tac-Toe Server')
             self.user = {'value': 1, 'bg': 'orange',
-                         'win': 'Result: You Won!', 'text':'X','Name':"ME"}   
+                         'win': 'Result: You Won!', 'text':'X','Name':"ME"}
             self.computer = {'value': self.line_size+1, 'bg': 'blue',
                      'win': 'Result: You Lost!', 'text':'O','Name':"YOU"}
-            
+        ##################################################
+
+
         self.board_bg = 'white'
         self.all_lines = ((0, 1, 2), (3, 4, 5), (6, 7, 8),
                           (0, 3, 6), (1, 4, 7), (2, 5, 8),
@@ -59,7 +62,7 @@ class TTT(tk.Tk):
 
     def create_control_frame(self):
         '''
-        Make Quit button to quit game 
+        Make Quit button to quit game
         Click this button to exit game
 
         '''
@@ -78,13 +81,13 @@ class TTT(tk.Tk):
         #vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
         self.status_frame = tk.Frame()
         self.status_frame.pack(expand=True,anchor='w',padx=20)
-        
+
         self.l_status_bullet = tk.Label(self.status_frame,text='O',font=('Helevetica',25,'bold'),justify='left')
         self.l_status_bullet.pack(side=tk.LEFT,anchor='w')
         self.l_status = tk.Label(self.status_frame,font=('Helevetica',25,'bold'),justify='left')
         self.l_status.pack(side=tk.RIGHT,anchor='w')
         #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        
+
     def create_result_frame(self):
         '''
         UI that shows Result
@@ -92,11 +95,11 @@ class TTT(tk.Tk):
         #vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
         self.result_frame = tk.Frame()
         self.result_frame.pack(expand=True,anchor='w',padx=20)
-        
+
         self.l_result = tk.Label(self.result_frame,font=('Helevetica',25,'bold'),justify='left')
         self.l_result.pack(side=tk.BOTTOM,anchor='w')
         #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        
+
     def create_debug_frame(self):
         '''
         Debug UI that gets input from the user
@@ -104,14 +107,14 @@ class TTT(tk.Tk):
         #vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
         self.debug_frame = tk.Frame()
         self.debug_frame.pack(expand=True)
-        
+
         self.t_debug = tk.Text(self.debug_frame,height=2,width=50)
         self.t_debug.pack(side=tk.LEFT)
         self.b_debug = tk.Button(self.debug_frame,text="Send",command=self.send_debug)
         self.b_debug.pack(side=tk.RIGHT)
         #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        
-    
+
+
     def create_board_frame(self):
         '''
         Tic-Tac-Toe Board UI
@@ -135,13 +138,13 @@ class TTT(tk.Tk):
                               lambda e, move=i: self.my_move(e, move))
             r, c = divmod(i, self.line_size)
             self.cell[i].grid(row=r, column=c,sticky="nsew")
-            
+
         #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     def play(self, start_user=1):
         '''
         Call this function to initiate the game
-        
+
         start_user: if its 0, start by "server" and if its 1, start by "client"
         '''
         #vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
@@ -152,7 +155,7 @@ class TTT(tk.Tk):
         self.create_debug_frame()
         self.state = self.active
         if start_user == self.myID:
-            self.my_turn = 1    
+            self.my_turn = 1
             self.user['text'] = 'X'
             self.computer['text'] = 'O'
             self.l_status_bullet.config(fg='green')
@@ -173,31 +176,31 @@ class TTT(tk.Tk):
         #vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
         self.destroy()
         #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        
-    def my_move(self, e, user_move):    
+
+    def my_move(self, e, user_move):
         '''
         Read button when the player clicks the button
-        
+
         e: event
-        user_move: button number, from 0 to 8 
+        user_move: button number, from 0 to 8
         '''
         #vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
-        
+
         # When it is not my turn or the selected location is already taken, do nothing
         if self.board[user_move] != 0 or not self.my_turn:
             return
-        # Send move to peer 
+        # Send move to peer
         valid = self.send_move(user_move)
-        
+
         # If ACK is not returned from the peer or it is not valid, exit game
         if not valid:
             self.quit()
-            
+
         # Update Tic-Tac-Toe board based on user's selection
         self.update_board(self.user, user_move)
-        
+
         # If the game is not over, change turn
-        if self.state == self.active:    
+        if self.state == self.active:
             self.my_turn = 0
             self.l_status_bullet.config(fg='red')
             self.l_status ['text'] = ['Hold']
@@ -215,27 +218,27 @@ class TTT(tk.Tk):
         msg =  "message" # get message using socket
 
         msg_valid_check = False
-         
-        
+
+
         if msg_valid_check: # Message is not valid
-            self.socket.close()   
+            self.socket.close()
             self.quit()
             return
         else:  # If message is valid - send ack, update board and change turn
 
             loc = 5 # received next-move
-            
-            ######################################################   
-            
-            
+
+            ######################################################
+
+
             #vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
             self.update_board(self.computer, loc, get=True)
-            if self.state == self.active:  
+            if self.state == self.active:
                 self.my_turn = 1
                 self.l_status_bullet.config(fg='green')
                 self.l_status ['text'] = ['Ready']
             #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                
+
 
     def send_debug(self):
         '''
@@ -250,15 +253,18 @@ class TTT(tk.Tk):
         d_msg = self.t_debug.get(1.0,"end")
         d_msg = d_msg.replace("\\r\\n","\r\n")   # msg is sanitized as \r\n is modified when it is given as input
         self.t_debug.delete(1.0,"end")
-        
+
         ###################  Fill Out  #######################
-        
+        '''
+        Check if the selected location is already taken or not
+        '''
+
         '''
         Send message to peer
         '''
-        
+
         '''
-        Get ack, extract move from the input
+        Get ack
         '''
         
         loc = 5 # peer's move, from 0 to 8
