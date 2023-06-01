@@ -29,18 +29,20 @@ if __name__ == '__main__':
     
     while True:
         client_socket, client_addr = server_socket.accept() #연결되도록 기다림
-        
-        start = random.randrange(0,2)   # select random to start
-        startStr = str(start)
-        client_socket.send(startStr.encode())  #start를 client에 보낸다.
-        
+
         ###################################################################
         # Send start move information to peer
-    
+        start = random.randrange(0, 2)  # select random to start
+        startStr = str(start)
+        client_socket.send(startStr.encode())  # start를 client에 보낸다.
     
         ######################### Fill Out ################################
         # Receive ack - if ack is correct, start game
-        
+
+        print(client_socket.recv(1024).decode())
+        # if (ACK맞으면) ~ 아니면 ???
+        # ACk확인 처리 안함
+
         
         ###################################################################
         

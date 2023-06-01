@@ -215,9 +215,10 @@ class TTT(tk.Tk):
         If is not, close socket and quit
         '''
         ###################  Fill Out  #######################
-        msg =  "message" # get message using socket
-
-        msg_valid_check = False
+        # msg =  "message" # get message using socket
+        msg=self.socket.recv(1024).decode()
+        print(msg)
+        msg_valid_check = check_msg(msg,self.recv_ip)
 
 
         if msg_valid_check: # Message is not valid
@@ -226,7 +227,13 @@ class TTT(tk.Tk):
             return
         else:  # If message is valid - send ack, update board and change turn
 
-            loc = 5 # received next-move
+            # 이렇게 가져오는게 아닌거같음
+            row=int(msg[46])
+            col=int(msg[49])
+            loc=3*row+col함  #누른 칸 번호
+
+            #loc = 5 # received next-move
+
 
             ######################################################
 
@@ -290,8 +297,14 @@ class TTT(tk.Tk):
         '''
         row,col = divmod(selection,3)
         ###################  Fill Out  #######################
-
+        rowStr = str(row)
+        colStr = str(col)
         # send message and check ACK
+        MSG="SEND ETTTP/1.0 \r\nHost: 127.0.0.1 \r\nNew-Move: ("+rowStr+", "+colStr+") \r\n\r\n"
+        self.socket.send(MSG.encode())
+        print(MSG)
+
+        # ACK 아직
         
         return True
         ######################################################  
@@ -361,7 +374,6 @@ def check_msg(msg, recv_ip):
     ###################  Fill Out  #######################
 
     
-
-
-    return True
+    return False #원래 TRUE로 되어있었음
+    #return True
     ######################################################  

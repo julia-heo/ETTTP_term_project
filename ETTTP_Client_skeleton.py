@@ -29,16 +29,22 @@ if __name__ == '__main__':
     
     with socket(AF_INET, SOCK_STREAM) as client_socket:
         client_socket.connect(SERVER_ADDR)  #connect 완료
-        
+
         ###################################################################
         # Receive who will start first from the server
         startStr = client_socket.recv(1024).decode()
         start = int(startStr)
-    
+
         ######################### Fill Out ################################
-        # Send ACK 
-        
-        
+        # Send ACK
+
+        # if start가 유효하면
+        if (start==1):
+            ACK='ACK ETTTP/1.0 \r\nHost: 127.0.0.1 \r\nFirst-Move: ME \r\n\r\n'
+        elif (start==0):
+            ACK = 'ACK ETTTP/1.0 \r\nHost: 127.0.0.1 \r\nFirst-Move: YOU \r\n\r\n'
+        client_socket.send(ACK.encode())
+
         ###################################################################
         
         # Start game
