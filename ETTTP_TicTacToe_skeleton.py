@@ -230,7 +230,7 @@ class TTT(tk.Tk):
             # 이렇게 가져오는게 아닌거같음
             row=int(msg[46])
             col=int(msg[49])
-            loc=3*row+col함  #누른 칸 번호
+            loc=3*row+col  #누른 칸 번호
 
             #loc = 5 # received next-move
 
@@ -317,11 +317,13 @@ class TTT(tk.Tk):
         '''
         # no skeleton
         ###################  Fill Out  #######################
-
-        
-
-
-        return True
+        if(get):
+            if (self.computer['Name'] == winner): return True
+            else: return False
+        else:
+            if (self.user['Name'] == winner): return True
+            else:return False
+        return False
         ######################################################  
 
         
