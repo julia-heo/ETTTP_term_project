@@ -265,6 +265,7 @@ class TTT(tk.Tk):
         '''
         Check if the selected location is already taken or not
         '''
+        #d_msg에 디버깅 메시지 저장되어있음 여기서
 
         '''
         Send message to peer

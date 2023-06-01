@@ -39,7 +39,15 @@ if __name__ == '__main__':
         ######################### Fill Out ################################
         # Receive ack - if ack is correct, start game
 
-        print(client_socket.recv(1024).decode())
+
+        startACK=client_socket.recv(1024).decode()
+        startA=startACK.replace("\r\n"," ")
+        print(startA)
+        startAC=startA.split(" ")
+
+
+
+        #ACK ETTTP/1.0 \r\nHost: 127.0.0.1 \r\nFirst-Move: YOU \r\n\r\n'
         # if (ACK맞으면) ~ 아니면 ???
         # ACk확인 처리 안함
 

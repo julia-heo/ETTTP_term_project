@@ -39,10 +39,12 @@ if __name__ == '__main__':
         # Send ACK
 
         # if start가 유효하면
-        if (start==1):
-            ACK='ACK ETTTP/1.0 \r\nHost: 127.0.0.1 \r\nFirst-Move: ME \r\n\r\n'
-        elif (start==0):
-            ACK = 'ACK ETTTP/1.0 \r\nHost: 127.0.0.1 \r\nFirst-Move: YOU \r\n\r\n'
+        if (start==1):  # client
+            ACK='ACK ETTTP/1.0\r\nHost: 127.0.0.1\r\nFirst-Move: ME\r\n\r\n'
+        elif (start==0):    #server
+            ACK = 'ACK ETTTP/1.0\r\nHost: 127.0.0.1\r\nFirst-Move: YOU\r\n\r\n'
+        else:
+            client_socket.close()
         client_socket.send(ACK.encode())
 
         ###################################################################
