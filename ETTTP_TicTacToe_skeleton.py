@@ -301,7 +301,7 @@ class TTT(tk.Tk):
         rowStr = str(row)
         colStr = str(col)
         # send message and check ACK
-        MSG="SEND ETTTP/1.0 \r\nHost: 127.0.0.1 \r\nNew-Move: ("+rowStr+", "+colStr+") \r\n\r\n"
+        MSG="SEND ETTTP/1.0 \r\nHost: 127.0.0.1 \r\nNew-Move: ("+rowStr+", "+colStr+") \r\n\r\n "
         self.socket.send(MSG.encode())
         print(MSG)
 

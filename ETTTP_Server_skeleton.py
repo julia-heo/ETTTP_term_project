@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
         startACK=client_socket.recv(1024).decode()
         startA=startACK.replace("\r\n"," ")
-        print(startA)
+        print(startA) 
         startAC=startA.split(" ")
 
 
