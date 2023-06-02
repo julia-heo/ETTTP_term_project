@@ -37,17 +37,17 @@ if __name__ == '__main__':
         client_socket.send(startStr.encode())  # start를 client에 보낸다.
 
         ######################### Fill Out ################################
-        # Receive ack - if ack is correct, start game
+        # Receive ack - if ack is correct, start game 
         startACK = client_socket.recv(1024).decode()
         startACKsplit = startACK.replace("\r\n", " ").replace(":", " ").split(" ")
         if not (startACKsplit[1] == "ETTTP/1.0"):
             print("잘못된 프로토콜")
             client_socket.close()
-        if not (startACKsplit[3] == "127.0.0.1"):
+        if not (startACKsplit[3] == str(MY_IP)):
             print("잘못된 ip주소")
             client_socket.close()
 
-        if (start == 0):  # 서버
+        if (start == 0):  # 서버 
             if not (startACKsplit[5] == "YOU"):
                 client_socket.close()
         elif (start == 1):

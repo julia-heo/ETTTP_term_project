@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
         ###################################################################
         # Receive who will start first from the server
-        startStr = client_socket.recv(1024).decode()
+        startStr = client_socket.recv(SIZE).decode()
         start = int(startStr)
 
         ######################### Fill Out ################################
@@ -37,10 +37,10 @@ if __name__ == '__main__':
 
         # if start가 유효하면
         if (start == 1):  # client
-            ACK = 'ACK ETTTP/1.0\r\nHost:127.0.0.1\r\nFirst-Move:ME\r\n\r\n'
+            ACK = "ACK ETTTP/1.0\r\nHost:"+SERVER_IP+"\r\nFirst-Move:ME\r\n\r\n"
             print("당신이 먼저 시작합니다")
         elif (start == 0):  # server
-            ACK = 'ACK ETTTP/1.0\r\nHost:127.0.0.1\r\nFirst-Move:YOU\r\n\r\n'
+            ACK = "ACK ETTTP/1.0\r\nHost:"+SERVER_IP+"\r\nFirst-Move:YOU\r\n\r\n"
             print("상대가 먼저 시작합니다")
         else:
             client_socket.close()

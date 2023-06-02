@@ -27,8 +27,8 @@ class TTT(tk.Tk):
         self.active = 'GAME ACTIVE'
         self.socket = target_socket
         
-        self.send_ip = dst_addr
-        self.recv_ip = src_addr
+        self.send_ip = dst_addr # 내가 보낼 ip
+        self.recv_ip = src_addr # 내 ip
         
         self.total_cells = 9
         self.line_size = 3
@@ -227,7 +227,7 @@ class TTT(tk.Tk):
             msgR = msg.replace("\r\n", " ").replace(":", " ").replace("(", " ").replace(")", " ").replace(",", " ")
             msgSplit = msgR.split(" ")
 
-            moveACK = "ACK ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:(" + msgSplit[6] + "," + msgSplit[7] + ")\r\n\r\n"
+            moveACK = "ACK ETTTP/1.0\r\nHost:"+self.send_ip+"\r\nNew-Move:(" + msgSplit[6] + "," + msgSplit[7] + ")\r\n\r\n"
             self.socket.send(moveACK.encode())
 
             row = int(msgSplit[6])
@@ -262,7 +262,6 @@ class TTT(tk.Tk):
         '''
         Check if the selected location is already taken or not
         '''
-        # 그 형준리가 준 보면 땡땡 뒤에 띄어쓰기가없음쿠ㅜㅜ
         # MSG="SEND ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:("+rowStr+", "+colStr+")\r\n\r\n"
         # d_msg처리 그리고 index 5에 (1, 2)이렇게 들어가 있음
         if check_msg(d_msg, self.recv_ip):  # Message is not valid
@@ -333,7 +332,8 @@ class TTT(tk.Tk):
         rowStr = str(row)
         colStr = str(col)
         # send message and check ACK
-        msg = "SEND ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:(" + rowStr + "," + colStr + ")\r\n\r\n "
+        # print("내 이동을 보낼 ip"+self.send_ip)
+        msg = "SEND ETTTP/1.0\r\nHost:"+self.send_ip+"\r\nNew-Move:(" + rowStr + "," + colStr + ")\r\n\r\n "
         self.socket.send(msg.encode())
 
         # ACK
@@ -355,7 +355,7 @@ class TTT(tk.Tk):
         # no skeleton
         ###################  Fill Out  #######################
         
-        msg = "RESULT ETTTP/1.0\r\nHost:192.168.0.2\r\nWinner:"+winner+"\r\n\r\n" #winner변수 넣고
+        msg = "RESULT ETTTP/1.0\r\nHost:"+self.send_ip+"\r\nWinner:"+winner+"\r\n\r\n" #winner변수 넣고
         
         self.socket.send(msg.encode())
 
@@ -419,13 +419,20 @@ def check_msg(msg, recv_ip):
     ###################  Fill Out  #######################
     msgR = msg.replace("\r\n", " ").replace(":", " ")
     msgSplit = msgR.split(" ")
+    #print(self.send_ip)
 
     if not (msgSplit[1] == "ETTTP/1.0"):
         print("잘못된 프로토콜")
         return True
+    
     if not (msgSplit[3] == str(recv_ip)):
+        print(msgSplit[3])
+        print(str(recv_ip))
         print("잘못된 ip주소!")
         return True
+    
+
+    
 
     return False
     # return True
