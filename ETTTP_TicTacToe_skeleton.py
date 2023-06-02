@@ -234,7 +234,7 @@ class TTT(tk.Tk):
             # coor = coor.replace(",", " ")
             # coorD = coor.split(" ")
             # 이렇게 가져오는게 아닌거같음
-            row=int(coorD[1])
+            row=int(msg[46])
             col=int(msg[49])
             loc=3*row+col  #누른 칸 번호
 
@@ -388,8 +388,9 @@ def check_msg(msg, recv_ip):
     if not (msgSplit[1] == "ETTTP/1.0"):
         print("잘못된 프로토콜")
         return True
-    if not (msgSplit[3] == recv_ip):
-        print("잘못된 ip주소")
+    if not (msgSplit[4] == str(recv_ip)):
+        print("잘못된 ip주소!")
+        print(msgSplit[3])
         return True
     return False #원래 TRUE로 되어있었음
     #return True
