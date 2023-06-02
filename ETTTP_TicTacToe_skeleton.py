@@ -256,7 +256,7 @@ class TTT(tk.Tk):
         Function to send message to peer using input from the textbox
         Need to check if this turn is my turn or not
         '''
-
+        #만약, 나의 차례가 아닐 경우 return해줌
         if not self.my_turn:
             self.t_debug.delete(1.0,"end")
             return
@@ -269,31 +269,54 @@ class TTT(tk.Tk):
         '''
         Check if the selected location is already taken or not
         '''
-        #d_msg에 디버깅 메시지 저장되어있음 여기서
+        # 그 형준리가 준 보면 땡땡 뒤에 띄어쓰기가없음쿠ㅜㅜ
+        # MSG="SEND ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:("+rowStr+", "+colStr+")\r\n\r\n"
+        # d_msg처리 그리고 index 5에 (1, 2)이렇게 들어가 있음
+        d_msgR = d_msg.replace("\r\n", " ")
+        d_msgR = d_msgR.replace(":", " ")
+        d_msgSplit = d_msgR.split(" ")
+        loc_chk = d_msgSplit[5]
+        #괄호 제거
+        loc_chk = loc_chk.replace("(","").replace(")","")
+        #스페이스 제거
+        loc_chk = loc_chk.replace(" ", "")
+        loc_arr = loc_chk.split(",")
+        d_row = loc_arr[0]
+        d_col = loc_arr[1]
+        loc = d_row * 3 +d_col
 
+        #만약, loc이 이미 적혀 있다면 리턴
+        if(self.board[loc]):
+            return
+
+        #d_msg에 디버깅 메시지 저장되어있음 여기서
+        #디버깅은 들어오는 메세지가 틀린지 맞는지 확인 안해도 괜찮음
         '''
         Send message to peer
         '''
-
+        #send msg
+        self.socekt.send(d_msg.encode())
         '''
         Get ack
         '''
-        
-        loc = 5 # peer's move, from 0 to 8
+        #만약 ack가 안오면? --> ACK가 안 올 경우에는 종료, 올 경우에는 d_msg_ack에 저장
+        d_msg_ack = self.socket.recv(1024).decode()
 
-        ######################################################  
-        
+
+        # peer's move, from 0 to 8
+
+        ######################################################
+
         #vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
         self.update_board(self.user, loc)
-            
+
         if self.state == self.active:    # always after my move
             self.my_turn = 0
             self.l_status_bullet.config(fg='red')
             self.l_status ['text'] = ['Hold']
             _thread.start_new_thread(self.get_move,())
-            
+
         #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        
         
     def send_move(self,selection):
         '''
