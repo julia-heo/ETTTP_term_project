@@ -1,12 +1,12 @@
 '''
   ETTTP_TicTacToe_skeleton.py
- 
+
   34743-02 Information Communications
   Term Project on Implementation of Ewah Tic-Tac-Toe Protocol
- 
+
   Skeleton Code Prepared by JeiHee Cho
   May 24, 2023
- 
+
  '''
 
 import random
@@ -216,54 +216,47 @@ class TTT(tk.Tk):
         '''
         ###################  Fill Out  #######################
         # msg =  "message" # get message using socket
-        msg=self.socket.recv(1024).decode()
-        print(msg)
-        msg_valid_check = check_msg(msg,self.recv_ip)
+        msg = self.socket.recv(1024).decode()
+        msg_valid_check = check_msg(msg, self.recv_ip)
 
-
-        if msg_valid_check: # Message is not valid
+        if msg_valid_check:  # Message is not valid
             self.socket.close()
             self.quit()
             return
         else:  # If message is valid - send ack, update board and change turn
-            # SEND ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:(3,2)\r\n\r\n
             msgR = msg.replace("\r\n", " ").replace(":", " ").replace("(", " ").replace(")", " ").replace(",", " ")
             msgSplit = msgR.split(" ")
 
-
-            moveACK="ACK ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:(" + msgSplit[6] + "," + msgSplit[7] + ")\r\n\r\n"
+            moveACK = "ACK ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:(" + msgSplit[6] + "," + msgSplit[7] + ")\r\n\r\n"
             self.socket.send(moveACK.encode())
 
-            row=int(msgSplit[6])
-            col=int(msgSplit[7])
-            loc=3*row+col  #누른 칸 번호 # received next-move
-
+            row = int(msgSplit[6])
+            col = int(msgSplit[7])
+            loc = 3 * row + col  # 누른 칸 번호 # received next-move
 
             ######################################################
 
-
-            #vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
+            # vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
             self.update_board(self.computer, loc, get=True)
             if self.state == self.active:
                 self.my_turn = 1
                 self.l_status_bullet.config(fg='green')
-                self.l_status ['text'] = ['Ready']
-            #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
+                self.l_status['text'] = ['Ready']
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     def send_debug(self):
         '''
         Function to send message to peer using input from the textbox
         Need to check if this turn is my turn or not
         '''
-        #만약, 나의 차례가 아닐 경우 return해줌
+        # 만약, 나의 차례가 아닐 경우 return해줌
         if not self.my_turn:
-            self.t_debug.delete(1.0,"end")
+            self.t_debug.delete(1.0, "end")
             return
         # get message from the input box
-        d_msg = self.t_debug.get(1.0,"end")
-        d_msg = d_msg.replace("\\r\\n","\r\n")   # msg is sanitized as \r\n is modified when it is given as input
-        self.t_debug.delete(1.0,"end")
+        d_msg = self.t_debug.get(1.0, "end")
+        d_msg = d_msg.replace("\\r\\n", "\r\n")  # msg is sanitized as \r\n is modified when it is given as input
+        self.t_debug.delete(1.0, "end")
 
         ###################  Fill Out  #######################
         '''
@@ -272,36 +265,52 @@ class TTT(tk.Tk):
         # 그 형준리가 준 보면 땡땡 뒤에 띄어쓰기가없음쿠ㅜㅜ
         # MSG="SEND ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:("+rowStr+", "+colStr+")\r\n\r\n"
         # d_msg처리 그리고 index 5에 (1, 2)이렇게 들어가 있음
+
         d_msgR = d_msg.replace("\r\n", " ")
         d_msgR = d_msgR.replace(":", " ")
         d_msgSplit = d_msgR.split(" ")
         loc_chk = d_msgSplit[5]
-        #괄호 제거
-        loc_chk = loc_chk.replace("(","").replace(")","")
-        #스페이스 제거
-        loc_chk = loc_chk.replace(" ", "")
-        loc_arr = loc_chk.split(",")
-        d_row = loc_arr[0]
-        d_col = loc_arr[1]
-        loc = d_row * 3 +d_col
+        print(loc_chk)
+        # 괄호 제거
+        loc_chk = loc_chk.replace("(", "").replace(")", "")
+        # 스페이스 제거
+        loc_chk = loc_chk.replace(",", " ")
+        loc_arr = loc_chk.split(" ")
+        print(loc_arr)
+        d_row = int(loc_arr[0])
+        d_col = int(loc_arr[1])
+        loc = d_row * 3 + d_col
 
-        #만약, loc이 이미 적혀 있다면 리턴
-        if(self.board[loc]):
+        print(d_row)
+        print(d_col)
+        print(type(d_row))
+        # 만약, loc이 이미 적혀 있다면 리턴
+        if (self.board[loc]):
+            print("이미 선택된 좌석입니다")
+            return
+        if not (0 <= d_row <= 2 and 0 <= d_col <= 2):
+            print("클릭할 수 없는 부분입니다!")
             return
 
-        #d_msg에 디버깅 메시지 저장되어있음 여기서
-        #디버깅은 들어오는 메세지가 틀린지 맞는지 확인 안해도 괜찮음
+        if -1 >= d_row or 3 <= d_row:
+            print("클릭할 수 없는 부분입니다.")
+            return
+        if 0 > d_col or 2 < d_col:
+            print("클릭할 수 없는 부분입니다.")
+            return
+
+        # d_msg에 디버깅 메시지 저장되어있음 여기서
+        # 디버깅은 들어오는 메세지가 틀린지 맞는지 확인 안해도 괜찮음
         '''
         Send message to peer
         '''
-        #send msg
-        self.socekt.send(d_msg.encode())
+        # send msg
+        self.socket.send(d_msg.encode())
         '''
         Get ack
         '''
-        #만약 ack가 안오면? --> ACK가 안 올 경우에는 종료, 올 경우에는 d_msg_ack에 저장
+        # 만약 ack가 안오면? --> ACK가 안 올 경우에는 종료, 올 경우에는 d_msg_ack에 저장
         d_msg_ack = self.socket.recv(1024).decode()
-
 
         # peer's move, from 0 to 8
 
@@ -328,50 +337,45 @@ class TTT(tk.Tk):
         rowStr = str(row)
         colStr = str(col)
         # send message and check ACK
-        # SEND ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:(3,2)\r\n\r\n
-        #MSG="SEND ETTTP/1.0\r\nHost: 127.0.0.1\r\nNew-Move: ("+rowStr+", "+colStr+")\r\n\r\n"
-        MSG = "SEND ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:(" + rowStr + "," + colStr + ")\r\n\r\n "
+        msg = "SEND ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:(" + rowStr + "," + colStr + ")\r\n\r\n "
+        self.socket.send(msg.encode())
 
-        self.socket.send(MSG.encode())
-        print(MSG)
+        # ACK
+        rcvAck = self.socket.recv(1024).decode()
+        # print("move 후 ACK: " + rcvAck)
 
-        # ACK 아직
-
-        afterMoveAck = self.socket.recv(1024).decode()
-        print("move 후 ACK: " + afterMoveAck)
-
-
-        msg_valid = check_msg(afterMoveAck, self.recv_ip)
-        if msg_valid:  # Message is not valid
+        if check_msg(rcvAck, self.recv_ip):  # Message is not valid
             self.socket.close()
             self.quit()
 
         return True
-        ######################################################  
+        ######################################################
 
-    
-    def check_result(self,winner,get=False):
+    def check_result(self, winner, get=False):
         '''
         Function to check if the result between peers are same
         get: if it is false, it means this user is winner and need to report the result first
         '''
         # no skeleton
         ###################  Fill Out  #######################
-        if(get):
-            if (self.computer['Name'] == winner): return True
-            else: return False
+        if (get):
+            if (self.computer['Name'] == winner):
+                return True
+            else:
+                return False
         else:
-            if (self.user['Name'] == winner): return True
-            else:return False
+            if (self.user['Name'] == winner):
+                return True
+            else:
+                return False
         return False
-        ######################################################  
+        ######################################################
 
-        
-    #vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
+    # vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
     def update_board(self, player, move, get=False):
         '''
         This function updates Board if is clicked
-        
+
         '''
         self.board[move] = player['value']
         self.remaining_moves.remove(move)
@@ -379,9 +383,9 @@ class TTT(tk.Tk):
         self.last_click = move
         self.setText[move].set(player['text'])
         self.cell[move]['bg'] = player['bg']
-        self.update_status(player,get=get)
+        self.update_status(player, get=get)
 
-    def update_status(self, player,get=False):
+    def update_status(self, player, get=False):
         '''
         This function checks status - define if the game is over or not
         '''
@@ -389,14 +393,14 @@ class TTT(tk.Tk):
         for line in self.all_lines:
             if sum(self.board[i] for i in line) == winner_sum:
                 self.l_status_bullet.config(fg='red')
-                self.l_status ['text'] = ['Hold']
+                self.l_status['text'] = ['Hold']
                 self.highlight_winning_line(player, line)
-                correct = self.check_result(player['Name'],get=get)
+                correct = self.check_result(player['Name'], get=get)
                 if correct:
                     self.state = player['win']
                     self.l_result['text'] = player['win']
                 else:
-                    self.l_result['text'] = "Somethings wrong..."
+                    self.l_result['text'] = "Somethings wrong…"
 
     def highlight_winning_line(self, player, line):
         '''
@@ -405,7 +409,8 @@ class TTT(tk.Tk):
         for i in line:
             self.cell[i]['bg'] = 'red'
 
-    #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 # End of Root class
 
@@ -415,14 +420,15 @@ def check_msg(msg, recv_ip):
     '''
     ###################  Fill Out  #######################
     msgR = msg.replace("\r\n", " ").replace(":", " ")
-    print(msgR)
     msgSplit = msgR.split(" ")
+
     if not (msgSplit[1] == "ETTTP/1.0"):
         print("잘못된 프로토콜")
         return True
     if not (msgSplit[3] == str(recv_ip)):
         print("잘못된 ip주소!")
         return True
-    return False #원래 TRUE로 되어있었음
-    #return True
+
+    return False
+    # return True
     ######################################################
