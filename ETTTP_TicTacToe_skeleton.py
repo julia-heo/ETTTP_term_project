@@ -265,6 +265,10 @@ class TTT(tk.Tk):
         # 그 형준리가 준 보면 땡땡 뒤에 띄어쓰기가없음쿠ㅜㅜ
         # MSG="SEND ETTTP/1.0\r\nHost:127.0.0.1\r\nNew-Move:("+rowStr+", "+colStr+")\r\n\r\n"
         # d_msg처리 그리고 index 5에 (1, 2)이렇게 들어가 있음
+        if check_msg(d_msg, self.recv_ip):  # Message is not valid
+            self.socket.close()
+            self.quit()
+            return
 
         d_msgR = d_msg.replace("\r\n", " ")
         d_msgR = d_msgR.replace(":", " ")
@@ -350,17 +354,19 @@ class TTT(tk.Tk):
         '''
         # no skeleton
         ###################  Fill Out  #######################
-        if (get):
-            if (self.computer['Name'] == winner):
-                return True
-            else:
-                return False
-        else:
-            if (self.user['Name'] == winner):
-                return True
-            else:
-                return False
-        return False
+        
+        msg = "RESULT ETTTP/1.0\r\nHost:192.168.0.2\r\nWinner:"+winner+"\r\n\r\n" #winner변수 넣고
+        
+        self.socket.send(msg.encode())
+
+        result=self.socket.recv(1024).decode()
+
+        msgWinner = result.replace("\r\n", " ").replace(":", " ").split(" ")
+        msg_Winner=msgWinner[5]
+        print(msg_Winner+"는 졌어")
+        if (msg_Winner==winner):  return False
+
+        return True
         ######################################################
 
     # vvvvvvvvvvvvvvvvvvv  DO NOT CHANGE  vvvvvvvvvvvvvvvvvvv
