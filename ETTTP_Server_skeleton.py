@@ -42,10 +42,21 @@ if __name__ == '__main__':
 
         startACK=client_socket.recv(1024).decode()
         startA=startACK.replace("\r\n"," ")
-        print(startA) 
+        print(startA)
         startAC=startA.split(" ")
-
-
+        if not (startAC[1]=="ETTTP/1.0"):
+            print("잘못된 프로토콜")
+            client_socket.close()
+        if not (startAC[3]=="127.0.0.1"):
+            print("잘못된 ip주소")
+            client_socket.close()
+        if(start==0):   # 서버
+            if not (startAC[5]=="YOU"):
+                client_socket.close()
+        elif(start==1):
+            if not (startAC[5]=="ME"):
+                client_socket.close()
+        print("연결 성공")
 
         #ACK ETTTP/1.0 \r\nHost: 127.0.0.1 \r\nFirst-Move: YOU \r\n\r\n'
         # if (ACK맞으면) ~ 아니면 ???

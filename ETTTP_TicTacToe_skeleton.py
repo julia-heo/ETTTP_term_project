@@ -226,9 +226,15 @@ class TTT(tk.Tk):
             self.quit()
             return
         else:  # If message is valid - send ack, update board and change turn
-
+            # MSG="SEND ETTTP/1.0\r\nHost: 127.0.0.1\r\nNew-Move: ("+rowStr+", "+colStr+")ㅕ\r\n\r\n"
+            # msgRe = msg.replace("\r\n", " ")
+            # msgS = msgRe.split(" ")
+            # coor=msgS[5].replace("("," ")
+            # coor = coor.replace(")", " ")
+            # coor = coor.replace(",", " ")
+            # coorD = coor.split(" ")
             # 이렇게 가져오는게 아닌거같음
-            row=int(msg[46])
+            row=int(coorD[1])
             col=int(msg[49])
             loc=3*row+col  #누른 칸 번호
 
@@ -301,7 +307,8 @@ class TTT(tk.Tk):
         rowStr = str(row)
         colStr = str(col)
         # send message and check ACK
-        MSG="SEND ETTTP/1.0 \r\nHost: 127.0.0.1 \r\nNew-Move: ("+rowStr+", "+colStr+") \r\n\r\n "
+        #MSG="SEND ETTTP/1.0\r\nHost: 127.0.0.1\r\nNew-Move: ("+rowStr+", "+colStr+")ㅕ\r\n\r\n"
+        MSG = "SEND ETTTP/1.0 \r\nHost: 127.0.0.1 \r\nNew-Move: (" + rowStr + ", " + colStr + ") \r\n\r\n "
         self.socket.send(MSG.encode())
         print(MSG)
 
@@ -375,8 +382,15 @@ def check_msg(msg, recv_ip):
     Function that checks if received message is ETTTP format
     '''
     ###################  Fill Out  #######################
-
-    
+    msgR = msg.replace("\r\n", " ")
+    print(msgR)
+    msgSplit = msgR.split(" ")
+    if not (msgSplit[1] == "ETTTP/1.0"):
+        print("잘못된 프로토콜")
+        return True
+    if not (msgSplit[3] == recv_ip):
+        print("잘못된 ip주소")
+        return True
     return False #원래 TRUE로 되어있었음
     #return True
     ######################################################  
