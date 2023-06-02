@@ -281,22 +281,14 @@ class TTT(tk.Tk):
         d_col = int(loc_arr[1])
         loc = d_row * 3 + d_col
 
-        print(d_row)
-        print(d_col)
-        print(type(d_row))
         # 만약, loc이 이미 적혀 있다면 리턴
-        if (self.board[loc]):
-            print("이미 선택된 좌석입니다")
-            return
+
         if not (0 <= d_row <= 2 and 0 <= d_col <= 2):
             print("클릭할 수 없는 부분입니다!")
             return
 
-        if -1 >= d_row or 3 <= d_row:
-            print("클릭할 수 없는 부분입니다.")
-            return
-        if 0 > d_col or 2 < d_col:
-            print("클릭할 수 없는 부분입니다.")
+        if (self.board[loc]):
+            print("이미 선택된 좌석입니다")
             return
 
         # d_msg에 디버깅 메시지 저장되어있음 여기서
