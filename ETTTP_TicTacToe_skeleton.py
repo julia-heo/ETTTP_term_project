@@ -189,7 +189,7 @@ class TTT(tk.Tk):     #TTT라는 클래스 정의 (tic-tac-toe 게임에 필요�
         self.destroy()                                  # Tkinter 창을 닫는 클래스 메소드
         #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    def my_move(self, e, user_move):                        # UI에서 클릭한 영역을 인식해
+    def my_move(self, e, user_move):                        # UI에서 클릭한 영역을 인식해 send_move를 호출하고, 자신의 보드를 업데이트하는 함수
         '''
         Read button when the player clicks the button
 
@@ -231,7 +231,7 @@ class TTT(tk.Tk):     #TTT라는 클래스 정의 (tic-tac-toe 게임에 필요�
         # get message using socket
         msg = self.socket.recv(SIZE).decode()                  # 상대가 자신의 move 좌표를 담아 보낸 메시지를 받아 decode한다
         msg_valid_check = check_msg(msg, self.recv_ip)         # 메시지가 유효한지(형식이 맞는지, 나에게 온 메시지가 맞는지) 검사
-
+        
         if msg_valid_check:  # Message is not valid            # 메시지가 유효하지 않다면
             self.socket.close()                                # 소켓을 닫는다
             self.quit()                                        # UI를 종료한다
