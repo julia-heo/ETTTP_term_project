@@ -11,6 +11,7 @@ We used python socket to implement tic-tac-toe game.
    - <b>Turns</b>: Players take turns to place their symbol in an empty cell.
    - <b>Winning</b>: The first player to align three of their symbols in a row (horizontally, vertically, or diagonally) wins the game.
    - <b>Draw</b>: If all nine cells are filled without either player achieving three in a row, the game ends in a draw.
-   - Tic-tac-toe is a straightforward game that is often used as a pedagogical tool for teaching concepts of strategy and logic. It is easy to learn and can be played anywhere with just paper and pencil.
+Tic-tac-toe is a straightforward game that is often used as a pedagogical tool for teaching concepts of strategy and logic. It is easy to learn and can be played anywhere with just paper and pencil.
    
-3. Why do we use socket?
+#### 2. Why do we use socket?
+   - Sockets are used for network communication between computers.
